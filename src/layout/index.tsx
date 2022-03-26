@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import { Breadcrumb, Empty, Layout, Menu, Select } from 'antd'
+import { Breadcrumb, Button, Empty, Layout, Menu, Select } from 'antd'
 
 import { DataContext, dataReducer, dataState } from '../store/data'
 import { findActiveCatetory } from '../store/util'
@@ -33,6 +33,10 @@ const BasicLayout = (props: any) => {
 
   const handleChange = (key: string) => {
     dispatch({ type: 'SET_FILTER_CONDITION', payload: { id: key } })
+  }
+
+  const handleReset = () => {
+    dispatch({ type: 'RESET_FILTER_CONDITION', payload: {} })
   }
 
   const handleMenuClick = ({ key }: { key: string }) => {
@@ -88,6 +92,7 @@ const BasicLayout = (props: any) => {
                 <Breadcrumb.Item key={index}>{breadcrumb}</Breadcrumb.Item>
               ))}
             </Breadcrumb>
+            <Button onClick={handleReset}>重置筛选项</Button>
           </Header>
           <Content style={{ padding: '0 20px 20px' }}>
             {props.children}

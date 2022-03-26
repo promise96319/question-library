@@ -1,0 +1,21 @@
+.container {
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -80%);
+  display: flex;
+  align-items: center;
+  align-items: center;
+  flex-direction: column;
+  > * {
+    margin-bottom: 20px;
+  }
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
