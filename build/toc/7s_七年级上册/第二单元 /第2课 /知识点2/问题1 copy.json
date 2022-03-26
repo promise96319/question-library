@@ -1,0 +1,10 @@
+{
+  "source": "xx",
+  "questionType": "xxx",
+  "time": "xx",
+  "province": "xx",
+  "author": "xx",
+  "answer": "string | number",
+  "answerDescription": "string",
+  "isShowAnswer": "boolean"
+}
