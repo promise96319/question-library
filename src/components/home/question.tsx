@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { Space } from 'antd'
+import React, { useContext, useEffect, useState } from 'react'
+import { Empty, Pagination, Space } from 'antd'
 import { DataContext } from '../../store/data'
 import { filterQuestions } from '../../store/util'
 
@@ -13,12 +13,17 @@ interface QuestionItemProps extends Question {
   children?: React.ReactNode
 }
 const QuestionItem = (props: QuestionItemProps) => {
-  const [isShowAnswer, setShowAnswer] = useState(false)
+  const { state } = useContext(DataContext)
+  const [isShowAnswer, setShowAnswer] = useState(state.isAnswerShow)
+
+  useEffect(() => {
+    setShowAnswer(state.isAnswerShow)
+  }, [state.isAnswerShow])
 
   const renderHeader = () => {
     const keys = ['time', 'province', 'grade', 'source', 'author']
     return (
-      <Space>
+      <Space className={styles.header}>
         {keys.map((key: string, index: number) => props[key] && (
           <Space key={index}>
             <span>
@@ -45,7 +50,7 @@ const QuestionItem = (props: QuestionItemProps) => {
         const eleProps = {
           key: idx,
           style: {
-            'margin-left': `${indent}px`,
+            marginLeft: `${indent}px`,
           },
         }
         const children = idx === 0 ? <span className={styles.title} onClick={onClick}>{index + 1}.  {text}</span> : text
@@ -91,30 +96,54 @@ const QuestionItem = (props: QuestionItemProps) => {
   }
 
   const renderFooter = () => {
-    return (
-      <div></div>
-    )
+    return null
   }
 
   return (
-    <Space direction="vertical" size="large" className={styles.main}>
+    <div className={styles.main}>
       {renderHeader()}
       {renderContent()}
       {renderAnswer()}
       {renderFooter()}
-    </Space>
+    </div>
   )
 }
 
 const QuestionComponent = () => {
   const filterCondition = useContext(DataContext)
   const filteredQuestions = filterQuestions(questions, filterCondition.state)
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
+  const onShowSizeChange = (current: number, size: number) => {
+    setPage(current)
+    setPageSize(size)
+  }
+
+  const sliceFilterQuestions = filteredQuestions.slice((page - 1) * pageSize, page * pageSize)
+
+  if (sliceFilterQuestions.length === 0) {
+    return (
+      <Space style={{ width: '100%', height: '300px', justifyContent: 'center' }}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="没有相关试题"></Empty>
+      </Space>
+    )
+  }
 
   return (
     <>
-      {filteredQuestions.map((question: Question, index: number) => {
-        return <QuestionItem {...question} key={index} index={index}/>
+      {sliceFilterQuestions.map((question: Question, index: number) => {
+        return <QuestionItem {...question} key={index} index={(page - 1) * pageSize + index}/>
       })}
+      <Pagination
+        current={page}
+        pageSize={pageSize}
+        total={filteredQuestions.length}
+        showSizeChanger
+        onShowSizeChange={onShowSizeChange}
+        onChange={onShowSizeChange}
+        style={{ paddingBottom: '100px', textAlign: 'right' }}
+      />
     </>
   )
 }

@@ -1,6 +1,7 @@
 const fs = require('fs/promises')
 const path = require('path')
 const json5 = require('json5')
+const gradesArray = require('./grades.json')
 
 const resolve = dir => path.join(__dirname, dir)
 
@@ -19,36 +20,10 @@ const resolve = dir => path.join(__dirname, dir)
 //     ],
 //   }
 // ]
-const catalogue = [
-  {
-    value: '7s',
-    label: '七年级上册',
-  },
-  {
-    value: '7x',
-    label: '七年级下册',
-  },
-  {
-    value: '8s',
-    label: '八年级上册',
-  },
-  {
-    value: '8x',
-    label: '八年级下册',
-  },
-  {
-    value: '9s',
-    label: '九年级上册',
-  },
-  {
-    value: '9x',
-    label: '九年级下册',
-  },
-]
 
 const grades = (() => {
   const result = {}
-  catalogue.forEach((item) => {
+  gradesArray.forEach((item) => {
     result[item.value] = item.label
   })
   return result

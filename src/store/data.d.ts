@@ -10,7 +10,13 @@ export interface QuestionParagraph {
   indent?: number
 }
 
-export interface Question {
+export interface Answer {
+  isShowAnswer?: boolean
+  answer?: string
+  answerDescription?: string
+}
+
+export interface Question extends Answer {
   id?: string
 
   grade?: string
@@ -20,9 +26,6 @@ export interface Question {
   province?: string
   author?: string
 
-  answer?: string
-  answerDescription?: string
-
   question: string | QuestionParagraph[]
   options?: string[]
 
@@ -30,4 +33,6 @@ export interface Question {
   level?: number
 }
 
-export interface FilterCondition extends Partial<Question> {}
+export interface FilterCondition extends Partial<Question> {
+  searchValue?: string
+}

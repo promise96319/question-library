@@ -1,13 +1,22 @@
 import React, { useReducer } from 'react'
-import { Empty, Layout, Menu, Select, Space } from 'antd'
+import { Breadcrumb, Empty, Layout, Menu, Select } from 'antd'
 
 import { DataContext, dataReducer, dataState } from '../store/data'
 import { findActiveCatetory } from '../store/util'
 import type { Catalogue } from '../store/data.d'
 import data from '../../build/data.json'
+import gradesArray from '../../build/grades.json'
 import styles from './index.module.scss'
 
-const { Content, Sider } = Layout
+const grades = (() => {
+  const result = {}
+  gradesArray.forEach((item) => {
+    result[item.value] = item.label
+  })
+  return result
+})()
+
+const { Content, Sider, Header } = Layout
 const { SubMenu } = Menu
 const { Option } = Select
 
@@ -16,11 +25,21 @@ const BasicLayout = (props: any) => {
 
   const menus = findActiveCatetory(data, state.id)
 
+  const breadcrumbs = state.id?.split('__').map((id: string, index: number) => {
+    if (index === 0)
+      return grades[id]
+    return id
+  })
+
   const handleChange = (key: string) => {
     dispatch({ type: 'SET_FILTER_CONDITION', payload: { id: key } })
   }
 
   const handleMenuClick = ({ key }: { key: string }) => {
+    handleChange(key)
+  }
+
+  const handleTitleClick = ({ key }: any) => {
     handleChange(key)
   }
 
@@ -31,7 +50,7 @@ const BasicLayout = (props: any) => {
     return data.map((item: Catalogue) => {
       if (item.children && item.children.length > 0) {
         return (
-          <SubMenu key={item.id} title={item.name}>
+          <SubMenu key={item.id} title={item.name} onTitleClick={handleTitleClick}>
             {renderMenu(item.children)}
           </SubMenu>
         )
@@ -50,21 +69,27 @@ const BasicLayout = (props: any) => {
         >
           <div className={styles.select}>
             <Select defaultValue="7s" style={{ width: 180 }} onChange={handleChange} >
-              <Option value="7s">七年级上册</Option>
-              <Option value="7x">七年级下册</Option>
-              <Option value="8s">八年级上册</Option>
-              <Option value="8x">八年级下册</Option>
-              <Option value="9s">九年级上册</Option>
-              <Option value="9x">九年级下册</Option>
+              {
+                gradesArray.map((grade) => {
+                  return <Option key={grade.value} value={grade.value}>{grade.label}</Option>
+                })
+              }
             </Select>
           </div>
 
           <Menu theme="light" mode="inline" onClick={handleMenuClick}>
-            {menus && menus.length > 0 ? renderMenu(menus) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+            {menus && menus.length > 0 ? renderMenu(menus) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="没有相关课程"/>}
           </Menu>
         </Sider>
         <Layout style={{ height: '100%', overflow: 'scroll' }}>
-          <Content style={{ margin: '24px 16px 0' }}>
+          <Header className={styles.breadcrumb}>
+            <Breadcrumb >
+              {breadcrumbs?.map((breadcrumb, index) => (
+                <Breadcrumb.Item key={index}>{breadcrumb}</Breadcrumb.Item>
+              ))}
+            </Breadcrumb>
+          </Header>
+          <Content style={{ padding: '0 20px 20px' }}>
             {props.children}
           </Content>
         </Layout>

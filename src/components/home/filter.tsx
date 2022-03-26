@@ -1,56 +1,76 @@
-import React from 'react'
-import { Space } from 'antd'
-import { authorList, gradeList, provinceList, questionTypeList, sourceList, timelist } from '../../data/index'
+import React, { useContext } from 'react'
+import { Space, Tag } from 'antd'
+import { authorList, provinceList, questionTypeList, sourceList, timelist } from '../../store/filter'
+import { DataContext } from '../../store/data'
 import styles from './filter.module.scss'
 
+const { CheckableTag } = Tag
+
 interface FilterOption {
-  key: string
+  id: string
   label: string
-  value: any[]
+  value: Set<string>
 }
 
 const filterOptions: FilterOption[] = [
   {
-    key: 'grade',
-    label: '年级',
-    value: gradeList,
-  },
-  {
-    key: 'source',
+    id: 'source',
     label: '来源',
     value: sourceList,
   },
   {
-    key: 'questionType',
+    id: 'questionType',
     label: '题型',
     value: questionTypeList,
   },
   {
-    key: 'time',
+    id: 'time',
     label: '时间',
     value: timelist,
   },
   {
-    key: 'province',
+    id: 'province',
     label: '地区',
     value: provinceList,
   },
   {
-    key: 'author',
+    id: 'author',
     label: '原创',
     value: authorList,
   },
 ]
 
-const FilterItem = (props: any) => {
-  const { label, value } = props
+const FilterItem = (props: FilterOption) => {
+  const { state, dispatch } = useContext(DataContext)
+  const { label, value, id } = props
+  const target = state[id]
+
+  const handleChange = (value: string | number, checked: boolean) => {
+    if (checked) {
+      dispatch({
+        type: 'SET_FILTER_CONDITION',
+        payload: {
+          [id]: value,
+        },
+      })
+    }
+  }
 
   return (
-    <Space size="large" className={styles['filter-item']}>
+    <Space className={styles.filterItem}>
       <label>{label}：</label>
-      <Space align='center'>
-        {value.map((value: string | number) => {
-          return <span key={value}>{value}</span>
+      <Space align="center">
+        {[...value].map((value: string | number, index: number) => {
+          return (
+            <CheckableTag
+              key={index}
+              checked={target === value}
+              onChange={(checked) => {
+                handleChange(value, checked)
+              }}>
+              {value}
+            </CheckableTag>
+          )
         })}
       </Space>
     </Space>
@@ -61,7 +81,7 @@ const Filter = () => {
   return (
     <div className={styles.filter}>
       {filterOptions.map((option: FilterOption) => {
-        return <FilterItem {...option}></FilterItem>
+        return <FilterItem {...option} key={option.id}></FilterItem>
       })}
     </div>
   )

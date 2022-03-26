@@ -1,5 +1,14 @@
 .filter {
-  &-item {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  &Item {
     width: 100%;
+    margin: 8px 0;
+  }
+  label {
+    color: #606266;
+    font-size: 12px;
   }
 }
