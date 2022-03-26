@@ -4,17 +4,27 @@ export interface Catalogue {
   children?: Catalogue[]
 }
 
-export interface Question {
-  key: string
+export interface QuestionParagraph {
+  tag?: string
+  text?: string
+  indent?: number
+}
 
+export interface Question {
+  id?: string
+
+  grade?: string
   source?: string
   questionType?: string
   time?: string
   province?: string
   author?: string
 
-  answer?: string | number
+  answer?: string
   answerDescription?: string
+
+  question: string | QuestionParagraph[]
+  options?: string[]
 
   createAt?: string
   level?: number

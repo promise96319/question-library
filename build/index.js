@@ -1,5 +1,6 @@
 const fs = require('fs/promises')
 const path = require('path')
+const json5 = require('json5')
 
 const resolve = dir => path.join(__dirname, dir)
 
@@ -18,6 +19,40 @@ const resolve = dir => path.join(__dirname, dir)
 //     ],
 //   }
 // ]
+const catalogue = [
+  {
+    value: '7s',
+    label: '七年级上册',
+  },
+  {
+    value: '7x',
+    label: '七年级下册',
+  },
+  {
+    value: '8s',
+    label: '八年级上册',
+  },
+  {
+    value: '8x',
+    label: '八年级下册',
+  },
+  {
+    value: '9s',
+    label: '九年级上册',
+  },
+  {
+    value: '9x',
+    label: '九年级下册',
+  },
+]
+
+const grades = (() => {
+  const result = {}
+  catalogue.forEach((item) => {
+    result[item.value] = item.label
+  })
+  return result
+})()
 
 const questions = []
 
@@ -27,14 +62,17 @@ async function parseDir(dir, file, key) {
 
   const [id, name] = file.split('_')
   // 上一个 id + 本次id
-  key = key ? `${key}__${id.trim()}` : id.trim()
+  const seperator = '__'
+  key = key ? `${key}${seperator}${id.trim()}` : id.trim()
 
   // 如果文件为 json 结尾，说明是问题，进行收集
-  if (file.endsWith('.json')) {
+  if (file.endsWith('.json') || file.endsWith('.json5')) {
     const json = await fs.readFile(filePath, 'utf-8')
     try {
-      const data = JSON.parse(json)
-      data.key = key
+      const data = json5.parse(json)
+      data.id = key
+      const gradeKey = key.split(seperator)[0]
+      data.grade = grades[gradeKey]
       questions.push(data)
     }
     catch (error) {

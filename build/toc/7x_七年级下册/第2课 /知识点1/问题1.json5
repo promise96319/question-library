@@ -1,0 +1,27 @@
+{
+  "grade": "七上",
+  "questionType": "中考真题",
+  "time": "2020",
+  "province": "上海",
+  "source": "阶段练习",
+  "author": "silence",
+
+  "question": [
+    {
+      "tag": "h1",
+      "text": "赖撒的卡死了的时间到了爱神的箭辣三丁就la，俺家的斯卡迪，按时",
+      "indent": 2
+    },
+    {},
+    {
+      "tag": "p",
+      "text": "赖撒的卡死了的时间到了爱______________神的箭辣三丁就la，俺家的斯卡迪，按时",
+      "indent": 4
+    },
+    {}
+  ],
+  "options": ["A.hhelo", "B.heelo", "C.hello"],
+
+  "answer": "C.hello",
+  "answerDescription": "answerDescript，onanswerDescripti。onanswerDescription"
+}
