@@ -12,7 +12,7 @@ interface FilterOption {
   value: Set<string>
 }
 
-const filterOptions: FilterOption[] = [
+export const filterOptions: FilterOption[] = [
   {
     id: 'source',
     label: '来源',
@@ -57,9 +57,9 @@ const FilterItem = (props: FilterOption) => {
   }
 
   return (
-    <Space className={styles.filterItem}>
+    <Space className={styles.filterItem} align="start">
       <label>{label}：</label>
-      <Space align="center">
+      <Space align="center" wrap={true}>
         {[...value].map((value: string | number, index: number) => {
           return (
             <CheckableTag

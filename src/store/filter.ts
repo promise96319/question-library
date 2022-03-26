@@ -5,6 +5,7 @@ export const enum QuestionType {
 }
 
 export const All = '全部'
+export const SEPERATOR = '$$'
 
 export const timelist = new Set([All])
 export const provinceList = new Set([All])
@@ -13,7 +14,7 @@ export const authorList = new Set([All])
 export const questionTypeList = new Set([All])
 
 const addItem = (list: Set<string>, item: string) => {
-  item.split('$$').forEach(i => list.add(i))
+  item.split(SEPERATOR).forEach(i => list.add(i))
 }
 
 question.forEach((item) => {

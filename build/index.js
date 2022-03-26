@@ -30,8 +30,10 @@ const grades = (() => {
 })()
 
 const questions = []
+const ignoreFiles = ['.DS_Store']
 
 async function parseDir(dir, file, key) {
+  if (ignoreFiles.includes(file)) return
   const filePath = `${dir}/${file}`
   const stat = await fs.stat(filePath)
 

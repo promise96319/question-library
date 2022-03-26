@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import { Breadcrumb, Button, Empty, Layout, Menu, Select } from 'antd'
+import { BackTop, Breadcrumb, Button, Empty, Layout, Menu, Select } from 'antd'
 
 import { DataContext, dataReducer, dataState } from '../store/data'
 import { findActiveCatetory } from '../store/util'
@@ -64,12 +64,13 @@ const BasicLayout = (props: any) => {
   }
 
   return (
-    <Layout style={{ height: '100%' }}>
+    <Layout style={{ height: '100%', overflow: 'scroll' }}>
       <DataContext.Provider value={{ state, dispatch }}>
         <Sider
           breakpoint="lg"
           collapsedWidth="0"
           theme="light"
+          style={{ height: '100%', overflow: 'scroll' }}
         >
           <div className={styles.select}>
             <Select defaultValue="7s" style={{ width: 180 }} onChange={handleChange} >
@@ -81,13 +82,13 @@ const BasicLayout = (props: any) => {
             </Select>
           </div>
 
-          <Menu theme="light" mode="inline" onClick={handleMenuClick}>
+          <Menu theme="light" mode="inline" onClick={handleMenuClick} style={{ paddingBottom: '100px' }}>
             {menus && menus.length > 0 ? renderMenu(menus) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="没有相关课程"/>}
           </Menu>
         </Sider>
         <Layout style={{ height: '100%', overflow: 'scroll' }}>
           <Header className={styles.breadcrumb}>
-            <Breadcrumb >
+            <Breadcrumb className={styles.ellipsis}>
               {breadcrumbs?.map((breadcrumb, index) => (
                 <Breadcrumb.Item key={index}>{breadcrumb}</Breadcrumb.Item>
               ))}
@@ -96,6 +97,7 @@ const BasicLayout = (props: any) => {
           </Header>
           <Content style={{ padding: '0 20px 20px' }}>
             {props.children}
+            <BackTop />
           </Content>
         </Layout>
       </DataContext.Provider>

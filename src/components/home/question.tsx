@@ -23,7 +23,7 @@ const QuestionItem = (props: QuestionItemProps) => {
   const renderHeader = () => {
     const keys = ['time', 'province', 'grade', 'source', 'author']
     return (
-      <Space className={styles.header}>
+      <Space className={styles.header} wrap>
         {keys.map((key: string, index: number) => props[key] && (
           <Space key={index}>
             <span>
@@ -65,11 +65,13 @@ const QuestionItem = (props: QuestionItemProps) => {
     if (!options || options.length === 0)
       return null
 
+    const prefix = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+
     return (
-      <Space size="large">
+      <Space size="large" wrap={true}>
         {options.map((item: string, index: number) => (
           <span key={index}>
-            {item}
+            {prefix[index]}. {item}
           </span>
         ))}
       </Space>

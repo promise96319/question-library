@@ -30,18 +30,18 @@ const SearchComponent = () => {
 
   return (
     <div className={styles.search}>
-      <Space size="middle">
+      <Space size="middle" wrap={true}>
         <Input
           placeholder="搜索关键字"
           prefix={<SearchOutlined />}
-          style={{ width: '240px' }}
+          style={{ width: '200px' }}
           allowClear={true}
           onChange={onSearch}>
         </Input>
 
         <div>共{filteredQuestions.length}个试题</div>
       </Space>
-      <Switch checkedChildren="显示答案" unCheckedChildren="隐藏答案" onChange={toggleAnswerVisible}/>
+      <Switch style={{ margin: '8px 0' }} checkedChildren="显示答案" unCheckedChildren="隐藏答案" onChange={toggleAnswerVisible}/>
     </div>
   )
 }

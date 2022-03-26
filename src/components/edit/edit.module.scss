@@ -1,0 +1,25 @@
+.main {
+  display: flex;
+  padding: 40px;
+}
+
+.left,
+.right {
+  flex: 1
+}
+
+.right {
+  margin-left: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #eee;
+  white-space: pre;
+  height: 400px;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+}
