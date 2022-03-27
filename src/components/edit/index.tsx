@@ -1,16 +1,20 @@
-import React from 'react'
-import { Button, Col, Form, Input, Row, Select, Space, message } from 'antd'
+import React, { useRef, useState } from 'react'
+import type { FormInstance } from 'antd/es/form'
+import { Button, Col, Form, Input, Row, Select, Space, Upload, message } from 'antd'
+import { UploadOutlined } from '@ant-design/icons'
+import json5 from 'json5'
 import { All, SEPERATOR, authorList, provinceList, questionTypeList, sourceList, timelist } from '../../store/filter'
 import QuestionItem from '../../components/home/question-item'
 import type { Question } from '../../store/data.d'
-import { parseText } from '../../utils/text'
+import { encodeText, parseText } from '../../utils/text'
 import styles from './edit.module.scss'
 
 const Edit = () => {
   const initState: Question = { question: '' }
-  const [config, setConfig] = React.useState(initState)
-  const [fileName, setFileName] = React.useState('')
-  const [url, setUrl] = React.useState('')
+  const [config, setConfig] = useState(initState)
+  const [fileName, setFileName] = useState('')
+  const [url, setUrl] = useState('')
+  const formRef = useRef<FormInstance>(null)
 
   const transformToUrl = () => {
     const blob = new Blob([JSON.stringify(config, null, 2)])
@@ -60,6 +64,54 @@ const Edit = () => {
       })
   }
 
+  const handleUpload = (info: any) => {
+    const file = info.file && info.file.originFileObj
+    if (!file) return
+    if (window.FileReader) {
+      const reader = new FileReader()
+      reader.onloadend = function(e) {
+        if (e.target?.readyState === FileReader.DONE) {
+          const split = (values?: string) => {
+            if (!values) return []
+            return values.split(SEPERATOR)
+          }
+
+          const generateOptions = (options: string[]) => {
+            const tags = ['A', 'B', 'C', 'D', 'E', 'F']
+            const result = {}
+            tags.forEach((tag, index) => {
+              result[`option${tag}`] = options[index] || ''
+            })
+            return result
+          }
+
+          try {
+            const config = json5.parse(e.target.result as string)
+            formRef.current?.setFieldsValue({
+              source: split(config.source),
+              questionType: split(config.questionType),
+              time: split(config.time),
+              province: split(config.province),
+              author: split(config.author),
+              question: encodeText(config.question),
+              ...generateOptions(config.options),
+              answer: encodeText(config.answer),
+              answerDescription: encodeText(config.answerDescription),
+              createdAt: Date.now(),
+            })
+            setConfig(config)
+            setFileName(file.name.replace(/\.json5?$/, ''))
+            transformToUrl()
+          }
+          catch {
+            message.error('文件解析错误，请重新上传！')
+          }
+        }
+      }
+      reader.readAsText(file)
+    }
+  }
+
   const renderSelectFormItem = (props: { name: string; label: string; options: Set<String> }) => {
     // eslint-disable-next-line react/prop-types
     const { name, label, options } = props
@@ -78,7 +130,7 @@ const Edit = () => {
     )
   }
 
-  const renderOption = (symbol: string) => {
+  const renderOptionItem = (symbol: string) => {
     return (
       <Col span={12}>
         <Form.Item name={`option${symbol}`} label={`选项${symbol}`}>
@@ -91,7 +143,18 @@ const Edit = () => {
   return (
     <div className={styles.main}>
       <div className={styles.left}>
-        <Form onValuesChange={onValuesChange}>
+        <Upload onChange={handleUpload} accept=".json,.json5" showUploadList={false}>
+          <Button
+            type="primary"
+            block
+            icon={<UploadOutlined />}
+            style={{ width: '100%', marginBottom: '20px' }}
+          >
+             点击上传单个 json/json5 文件
+          </Button>
+        </Upload>
+
+        <Form ref={formRef} onValuesChange={onValuesChange}>
           <Row gutter={24}>
             {renderSelectFormItem({ label: '来源', name: 'source', options: sourceList })}
             {renderSelectFormItem({ label: '题型', name: 'questionType', options: questionTypeList })}
@@ -103,7 +166,7 @@ const Edit = () => {
             <Input.TextArea placeholder="第一行的首字母为 $$ 时，表示加粗。其余行首字母为 # 号时表示缩进，多个 # 号表示缩进多次。enter 键换行等同于开始新的段落。" autoSize={{ minRows: 4, maxRows: 20 }} allowClear={true}/>
           </Form.Item>
           <Row gutter={24}>
-            {['A', 'B', 'C', 'D', 'E', 'F'].map((symbol: string) => renderOption(symbol))}
+            {['A', 'B', 'C', 'D', 'E', 'F'].map((symbol: string) => renderOptionItem(symbol))}
           </Row>
           <Form.Item name="answer" label="正确答案">
             <Input.TextArea autoSize={{ minRows: 2, maxRows: 20 }} allowClear={true} placeholder="正确答案，可以不填"/>

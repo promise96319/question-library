@@ -29,3 +29,13 @@ export const parseText = (texts: string) => {
   })
   return result
 }
+
+export const encodeText = (texts: TextParagraph[]) => {
+  return texts.map((textParagraph: TextParagraph) => {
+    const { text = '', bold = false, indent = 0 } = textParagraph
+    let result = text
+    result = indentSymbol.repeat(indent) + result
+    result = bold ? boldSymbol + result : result
+    return result
+  }).join('\n')
+}

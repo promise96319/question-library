@@ -15,13 +15,14 @@ const TextParagraphComponent = (props: TextParagraphComponentProps) => {
         const eleProps = {
           key: idx,
           style: {
-            marginLeft: `${indent * 16}px`,
+            marginLeft: `${indent * 20}px`,
             fontWeight: bold ? '500' : 'normal',
             fontSize: '14px',
             minHeight: '22px',
             lineHeight: '22px',
             marginBottom: '4px',
             marginTop: '4px',
+            witeSpace: 'pre-wrap',
           },
         }
         const children = index && idx === 0 ? `${index}. ${text}` : text

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Space } from 'antd'
 
 import type { Question } from '../../store/data.d'
-import { TextParagraph } from '../../utils/text'
 import styles from './question-item.module.scss'
 import TextParagraphComponent from './text-paragraph'
 
@@ -96,13 +95,13 @@ const QuestionItem = (props: QuestionItemProps) => {
     }
     return isAnswerShow && (
       <Space direction="vertical" className={styles.answer} size="small">
-        {answer && (
+        {answer && answer.length > 0 && (
           <Space align="start">
             <p style={style} className={styles.answerLabel}>【答案】</p>
             <TextParagraphComponent texts={answer}></TextParagraphComponent>
           </Space>
         )}
-        {answerDescription && (
+        {answerDescription && answerDescription.length > 0 && (
           <Space align="start">
             <p style={style} className={styles.answerLabel}>【分析】</p>
             <TextParagraphComponent texts={answerDescription}></TextParagraphComponent>
