@@ -163,7 +163,7 @@ const Edit = () => {
             {renderSelectFormItem({ label: '原创', name: 'author', options: authorList })}
           </Row>
           <Form.Item required name="question" label="问题描述" >
-            <Input.TextArea placeholder="第一行的首字母为 $$ 时，表示加粗。其余行首字母为 # 号时表示缩进，多个 # 号表示缩进多次。enter 键换行等同于开始新的段落。" autoSize={{ minRows: 4, maxRows: 20 }} allowClear={true}/>
+            <Input.TextArea placeholder="1.首字母为 $$ 时，表示加粗。2.首字母为 # 号时表示缩进，多个 # 号表示缩进多次。3.enter 键换行等同于开始新的段落。" autoSize={{ minRows: 4, maxRows: 20 }} allowClear={true}/>
           </Form.Item>
           <Row gutter={24}>
             {['A', 'B', 'C', 'D', 'E', 'F'].map((symbol: string) => renderOptionItem(symbol))}

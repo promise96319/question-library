@@ -40,7 +40,9 @@ async function parseDir(dir, file, key) {
   const [id, name] = file.split('_')
   // 上一个 id + 本次id
   const seperator = '__'
-  key = key ? `${key}${seperator}${id.trim()}` : id.trim()
+  const menuName = (name && name.trim()) || id.trim()
+  // 7x__单元__课__知识点
+  key = key ? `${key}${seperator}${menuName}` : id.trim()
 
   // 如果文件为 json 结尾，说明是问题，进行收集
   if (file.endsWith('.json') || file.endsWith('.json5')) {
@@ -64,16 +66,22 @@ async function parseDir(dir, file, key) {
 
   return {
     id: key,
-    name: (name && name.trim()) || id.trim(),
+    name: menuName,
     children,
   }
 }
 
 async function parse(dir, key = '') {
   const files = await fs.readdir(dir)
+  // 根据前缀将文件排序
+  const sortedFiles = files.sort((a, b) => {
+    const [aId] = a.split('_')
+    const [bId] = b.split('_')
+    return aId.localeCompare(bId)
+  })
   const result = []
   for (let i = 0; i < files.length; i++) {
-    const file = files[i]
+    const file = sortedFiles[i]
     const parsedJson = await parseDir(dir, file, key)
     if (!parsedJson) continue
     result.push(parsedJson)
