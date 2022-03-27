@@ -1,6 +1,7 @@
 .main {
   display: flex;
   padding: 40px;
+  background-color: #f0f2f5;
 }
 
 .left,
@@ -12,14 +13,16 @@
   margin-left: 40px;
   display: flex;
   flex-direction: column;
+  > * {
+    margin-bottom: 20px;
+  }
 }
 
 .content {
   padding: 20px;
   border-radius: 8px;
-  background-color: #eee;
+  background-color: #fff;
   white-space: pre;
-  height: 400px;
+  height: 200px;
   overflow-y: scroll;
-  margin-bottom: 20px;
 }
