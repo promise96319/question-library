@@ -2,7 +2,8 @@ import React from 'react'
 import { Button, Col, Form, Input, Row, Select, Space, message } from 'antd'
 import { All, SEPERATOR, authorList, provinceList, questionTypeList, sourceList, timelist } from '../../store/filter'
 import QuestionItem from '../../components/home/question-item'
-import type { Question, QuestionParagraph } from '../../store/data.d'
+import type { Question } from '../../store/data.d'
+import { parseText } from '../../utils/text'
 import styles from './edit.module.scss'
 
 const Edit = () => {
@@ -17,51 +18,13 @@ const Edit = () => {
   }
 
   const onValuesChange = (changedValues: any, allValues: any) => {
-    const handleQuestion = (text?: string) => {
-      if (!text) return []
-      const boldSymbol = '$$'
-      const indentSymbol = '#'
-      const result = text.split('\n')
-      const questions: QuestionParagraph[] = []
-      result.forEach((item: string, index: number) => {
-        if (index === 0) {
-          if (result[0].startsWith(boldSymbol)) {
-            const question = result[0].slice(2)
-            questions.push({
-              tag: 'h2',
-              text: question,
-            })
-          }
-          else {
-            questions.push({
-              tag: 'p',
-              text: item,
-            })
-          }
-        }
-        else {
-          let indent = 0
-          while (item.startsWith(indentSymbol)) {
-            indent += 1
-            item = item.slice(1)
-          }
-          questions.push({
-            tag: 'p',
-            text: item,
-            indent,
-          })
-        }
-      })
-      return questions
-    }
-
     const join = (values?: string[]) => {
       if (!values) return ''
       return values.join(SEPERATOR)
     }
 
     const handleOptions = (allValues: any) => {
-      const tags = ['A', 'B', 'C', 'D', 'E']
+      const tags = ['A', 'B', 'C', 'D', 'E', 'F']
       const options: string[] = []
       tags.forEach((tag: string) => {
         const value = allValues[`option${tag}`]
@@ -77,10 +40,10 @@ const Edit = () => {
       time: join(allValues.time),
       province: join(allValues.province),
       author: join(allValues.author),
-      question: handleQuestion(allValues.question),
+      question: parseText(allValues.question),
       options: handleOptions(allValues),
-      answer: allValues.answer,
-      answerDescription: allValues.answerDescription,
+      answer: parseText(allValues.answer),
+      answerDescription: parseText(allValues.answerDescription),
       createdAt: Date.now(),
     }
     setConfig(config)
@@ -137,16 +100,16 @@ const Edit = () => {
             {renderSelectFormItem({ label: '原创', name: 'author', options: authorList })}
           </Row>
           <Form.Item required name="question" label="问题描述" >
-            <Input.TextArea placeholder="第一行的首字母为 $$ 时，表示加粗。其余行首字母为 # 号时表示缩进，多个 # 号表示缩进多次。enter 键换行等同于开始新的段落。" autoSize={{ minRows: 4, maxRows: 12 }} allowClear={true}/>
+            <Input.TextArea placeholder="第一行的首字母为 $$ 时，表示加粗。其余行首字母为 # 号时表示缩进，多个 # 号表示缩进多次。enter 键换行等同于开始新的段落。" autoSize={{ minRows: 4, maxRows: 20 }} allowClear={true}/>
           </Form.Item>
           <Row gutter={24}>
-            {['A', 'B', 'C', 'D', 'E'].map((symbol: string) => renderOption(symbol))}
+            {['A', 'B', 'C', 'D', 'E', 'F'].map((symbol: string) => renderOption(symbol))}
           </Row>
           <Form.Item name="answer" label="正确答案">
-            <Input allowClear={true} placeholder="正确答案内容"/>
+            <Input.TextArea autoSize={{ minRows: 2, maxRows: 20 }} allowClear={true} placeholder="正确答案，可以不填"/>
           </Form.Item>
-          <Form.Item name="answerDescription" label="答案描述">
-            <Input.TextArea autoSize={{ minRows: 2, maxRows: 12 }} allowClear={true} placeholder="答案描述，可以不填"/>
+          <Form.Item name="answerDescription" label="答案分析">
+            <Input.TextArea autoSize={{ minRows: 2, maxRows: 20 }} allowClear={true} placeholder="答案分析，可以不填"/>
           </Form.Item>
         </Form>
       </div>

@@ -36,7 +36,7 @@ const QuestionComponent = () => {
             {...question}
             key={index}
             index={(page - 1) * pageSize + index}
-            isShowAnswer={!!state.isShowAnswer}
+            isAnswerShow={!!state.isAnswerShow}
           />)
       })}
       <Pagination

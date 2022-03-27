@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Space } from 'antd'
 
-import type { Question, QuestionParagraph } from '../../store/data.d'
+import type { Question } from '../../store/data.d'
+import { TextParagraph } from '../../utils/text'
 import styles from './question-item.module.scss'
+import TextParagraphComponent from './text-paragraph'
 
 interface QuestionItemProps extends Question {
   // 序号
@@ -13,7 +15,7 @@ interface QuestionItemProps extends Question {
 }
 
 const QuestionItem = (props: QuestionItemProps) => {
-  const [isShowAnswer, setShowAnswer] = useState(!!props.isAnswerShow)
+  const [isAnswerShow, setShowAnswer] = useState(!!props.isAnswerShow)
 
   useEffect(() => {
     setShowAnswer(!!props.isAnswerShow)
@@ -21,46 +23,35 @@ const QuestionItem = (props: QuestionItemProps) => {
 
   const renderHeader = () => {
     const keys = ['time', 'province', 'grade', 'source', 'author']
+    let hasDot = false
     return (
       <Space className={styles.header} wrap>
-        {keys.map((key: string, index: number) => props[key] && (
-          <Space key={index}>
-            <span>
-              {props[key]}
-            </span>
-            <span>
-              {index !== keys.length - 1 && ' • '}
-            </span>
-          </Space>
-        ))}
+        {keys.map((key: string, index: number) => {
+          if (!props[key]) return null
+          const item = (
+            <Space key={index}>
+              {hasDot && <span> • </span>}
+              <span>
+                {props[key]}
+              </span>
+            </Space>
+          )
+          hasDot = true
+          return item
+        })}
       </Space>
     )
   }
 
   const renderQuestion = () => {
     const { question, index } = props
-    const onClick = () => setShowAnswer(!isShowAnswer)
+    const onClick = () => setShowAnswer(!isAnswerShow)
     if (typeof question === 'string')
       return <h2 className={styles.title} onClick={onClick}>{index + 1}.  {question}</h2>
 
     return (
-      <div onClick={onClick}>
-        {
-          question.map((item: QuestionParagraph, idx: number) => {
-            const { text = '', tag = 'p', indent = 0 } = item
-            const eleProps = {
-              key: idx,
-              style: {
-                marginLeft: `${indent * 10}px`,
-              },
-              className: tag === 'h2' ? styles.title : '',
-            }
-
-            const children = idx === 0 ? `${index + 1}.  ${text}` : text
-            const ele = React.createElement(tag, eleProps, children)
-            return ele
-          })
-        }
+      <div onClick={onClick} className={styles.questions}>
+        <TextParagraphComponent texts={question} index={index + 1}></TextParagraphComponent>
       </div>
     )
   }
@@ -70,16 +61,18 @@ const QuestionItem = (props: QuestionItemProps) => {
     if (!options || options.length === 0)
       return null
 
-    const prefix = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    const prefix = ['A', 'B', 'C', 'D', 'E', 'F']
+    // 控制多少个字母自动换行
+    const isWrap = options.reduce((prev, curr) => prev + curr.length, 0) > 40
 
     return (
-      <Space size="large" wrap={true}>
+      <div className={styles.options}>
         {options.map((item: string, index: number) => (
-          <span key={index}>
-            {prefix[index]}. {item}
-          </span>
+          <div key={index} style={{ width: isWrap ? '100%' : 'auto' }}>
+            {prefix[index]}.  {item}
+          </div>
         ))}
-      </Space>
+      </div>
     )
   }
 
@@ -94,10 +87,27 @@ const QuestionItem = (props: QuestionItemProps) => {
 
   const renderAnswer = () => {
     const { answer, answerDescription } = props
-    return isShowAnswer && (
-      <Space direction="vertical" className={styles.answer}>
-        <div className="result"><span className={styles.answerLabel}>正确答案：</span>{answer}</div>
-        {answerDescription && <div className="description"><span className={styles.answerLabel}>答案讲解：</span>{answerDescription}</div>}
+    const style = {
+      fontSize: '14px',
+      minHeight: '22px',
+      lineHeight: '22px',
+      marginBottom: '4px',
+      marginTop: '4px',
+    }
+    return isAnswerShow && (
+      <Space direction="vertical" className={styles.answer} size="small">
+        {answer && (
+          <Space align="start">
+            <p style={style} className={styles.answerLabel}>【答案】</p>
+            <TextParagraphComponent texts={answer}></TextParagraphComponent>
+          </Space>
+        )}
+        {answerDescription && (
+          <Space align="start">
+            <p style={style} className={styles.answerLabel}>【分析】</p>
+            <TextParagraphComponent texts={answerDescription}></TextParagraphComponent>
+          </Space>
+        )}
       </Space>
     )
   }

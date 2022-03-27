@@ -1,5 +1,6 @@
 
-import type { Catalogue, FilterCondition, Question, QuestionParagraph } from './data.d'
+import type { TextParagraph } from '../utils/text'
+import type { Catalogue, FilterCondition, Question } from './data.d'
 import { All } from './filter'
 export const DEFAULT_GRADE = '7s'
 export const findActiveCatetory = (catalogue: Catalogue[], activeCategoryId: string = DEFAULT_GRADE) => {
@@ -26,7 +27,7 @@ const isSearched = (questionConfig?: Question, searchValue?: string) => {
 
   const isInAnswer = (answer || '').includes(searchValue) || (answerDescription || '').includes(searchValue)
   const isInOptions = (options || []).some((item: string) => item.includes(searchValue))
-  const isInQuestion = typeof question === 'string' ? question.includes(searchValue) : question && question.some((item: QuestionParagraph) => item.text && item.text.includes(searchValue))
+  const isInQuestion = typeof question === 'string' ? question.includes(searchValue) : question && question.some((item: TextParagraph) => item.text && item.text.includes(searchValue))
   const isIncludeSearch = (value?: string, searchValue?: string) => {
     if (!searchValue) return true
     if (!value) return false

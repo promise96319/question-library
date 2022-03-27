@@ -4,16 +4,10 @@ export interface Catalogue {
   children?: Catalogue[]
 }
 
-export interface QuestionParagraph {
-  tag?: string
-  text?: string
-  indent?: number
-}
-
 export interface Answer {
-  isShowAnswer?: boolean
-  answer?: string
-  answerDescription?: string
+  isAnswerShow?: boolean
+  answer?: TextParagraph[]
+  answerDescription?: TextParagraph[]
 }
 
 export interface Question extends Answer {
@@ -26,7 +20,7 @@ export interface Question extends Answer {
   province?: string
   author?: string
 
-  question: string | QuestionParagraph[]
+  question: string | TextParagraph[]
   options?: string[]
 
   createAt?: string
