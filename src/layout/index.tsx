@@ -64,27 +64,29 @@ const BasicLayout = (props: any) => {
   }
 
   return (
-    <Layout style={{ height: '100%', overflow: 'scroll' }}>
+    <Layout style={{ height: '100%', overflowY: 'scroll' }}>
       <DataContext.Provider value={{ state, dispatch }}>
         <Sider
           breakpoint="lg"
           collapsedWidth="0"
           theme="light"
-          style={{ height: '100%', overflow: 'scroll' }}
+          style={{ height: '100%' }}
         >
-          <div className={styles.select}>
-            <Select defaultValue="7s" style={{ width: 180 }} onChange={handleChange} >
-              {
-                gradesArray.map((grade) => {
-                  return <Option key={grade.value} value={grade.value}>{grade.label}</Option>
-                })
-              }
-            </Select>
-          </div>
+          <div style={{ height: '100%', overflowY: 'scroll', overflowX: 'auto' }}>
+            <div className={styles.select}>
+              <Select defaultValue="7s" style={{ width: 180 }} onChange={handleChange} >
+                {
+                  gradesArray.map((grade) => {
+                    return <Option key={grade.value} value={grade.value}>{grade.label}</Option>
+                  })
+                }
+              </Select>
+            </div>
 
-          <Menu theme="light" mode="inline" onClick={handleMenuClick} style={{ paddingBottom: '100px' }}>
-            {menus && menus.length > 0 ? renderMenu(menus) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="没有相关课程"/>}
-          </Menu>
+            <Menu theme="light" mode="inline" onClick={handleMenuClick} style={{ paddingBottom: '100px' }}>
+              {menus && menus.length > 0 ? renderMenu(menus) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="没有相关课程"/>}
+            </Menu>
+          </div>
         </Sider>
         <Layout style={{ height: '100%', overflow: 'scroll' }}>
           <Header className={styles.breadcrumb}>
