@@ -92,7 +92,6 @@ const QuestionItem = (props: QuestionItemProps) => {
       lineHeight: '22px',
       marginBottom: '4px',
       marginTop: '4px',
-      whiteSpace: 'nowrap',
     }
     return isAnswerShow && (
       <Space direction="vertical" className={styles.answer} size="small">
