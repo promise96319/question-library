@@ -154,6 +154,9 @@ const Edit = () => {
           direction="vertical"
           style={{ width: '100%', marginBottom: '20px' }}
         >
+          <a href="https://www.yuque.com/silence94/nshgbk/pbtoi1" target="__blank">
+            <Button block>说明文档</Button>
+          </a>
           <Button onClick={reset} danger block>重置试题内容</Button>
           <Dragger onChange={handleUpload} accept=".json,.json5" showUploadList={false}>
              点击上传单个 json/json5 文件
