@@ -8,6 +8,7 @@ import QuestionItem from '../../components/home/question-item'
 import type { Question } from '../../store/data.d'
 import { encodeText, parseText } from '../../utils/text'
 import styles from './edit.module.scss'
+const { Dragger } = Upload
 
 const Edit = () => {
   const initState: Question = { question: '' }
@@ -52,6 +53,13 @@ const Edit = () => {
     }
     setConfig(config)
     transformToUrl()
+  }
+
+  const reset = () => {
+    formRef.current?.resetFields()
+    setConfig(initState)
+    setFileName('')
+    setUrl('')
   }
 
   const copy = () => {
@@ -143,16 +151,15 @@ const Edit = () => {
   return (
     <div className={styles.main}>
       <div className={styles.left}>
-        <Upload onChange={handleUpload} accept=".json,.json5" showUploadList={false}>
-          <Button
-            type="primary"
-            block
-            icon={<UploadOutlined />}
-            style={{ width: '100%', marginBottom: '20px' }}
-          >
+        <Space
+          direction="vertical"
+          style={{ width: '100%', marginBottom: '20px' }}
+        >
+          <Button onClick={reset} danger block>重置试题内容</Button>
+          <Dragger onChange={handleUpload} accept=".json,.json5" showUploadList={false}>
              点击上传单个 json/json5 文件
-          </Button>
-        </Upload>
+          </Dragger>
+        </Space>
 
         <Form ref={formRef} onValuesChange={onValuesChange}>
           <Row gutter={24}>
