@@ -14,12 +14,12 @@ const HeadComponent = (props: HeadComponentProps) => {
     <>
       <Head>
         <title>{title}</title>
-        <meta httpEquiv="Content-Type" content="text/html;charset=utf-8" />
+        {/* <meta httpEquiv="Content-Type" content="text/html;charset=utf-8" /> */}
         <meta name="description" content={description}></meta>
         <meta name="keywords" content={keywords}></meta>
         <meta property="og:title" content={title}></meta>
         <meta property="og:description" content={description}></meta>
-        <link rel="shortcut icon" href="/favicon.ico"/>
+        <link rel="shortcut icon" href="/favicon.ico?v=0.0.1"></link>
         {baiduTongJi && <script dangerouslySetInnerHTML={{
           __html: `
 var _hmt = _hmt || [];
