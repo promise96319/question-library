@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react'
 import type { FormInstance } from 'antd/es/form'
 import { Button, Col, Form, Input, Row, Select, Space, Upload, message } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
 import json5 from 'json5'
 import { All, SEPERATOR, authorList, provinceList, questionTypeList, sourceList, timelist } from '../../store/filter'
 import QuestionItem from '../../components/home/question-item'
